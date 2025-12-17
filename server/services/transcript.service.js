@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const genAI = new GoogleGenerativeAI("AIzaSyCs_tR2jaOe5whnCbftIAg2FvyUZLMfSSE");
-console.log("Key", process.env.GEMINI_API_KEY);
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+// console.log("Key",process.env.GEMINI_API_KEY);
 function extractJSON(text) {
   // Remove markdown code fences if present
   let cleaned = text
