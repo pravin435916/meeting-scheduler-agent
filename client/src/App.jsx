@@ -1,16 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import Header from './components/Header';
-import Navigation from './components/Navigation';
-import Dashboard from './pages/Dashboard';
-import Meetings from './pages/Meetings';
-import Users from './pages/Users';
-import TranscriptAnalysis from './pages/TranscriptAnalysis';
-import { API_BASE } from './config/constants';
+import { useState, useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import Navigation from "./components/Navigation";
+import Dashboard from "./pages/Dashboard";
+import Meetings from "./pages/Meetings";
+import Users from "./pages/Users";
+import TranscriptAnalysis from "./pages/TranscriptAnalysis";
+import { API_BASE } from "./config/constants";
 
 const App = () => {
-  const [activeTab, setActiveTab] = useState("dashboard");
   const [users, setUsers] = useState([]);
   const [meetings, setMeetings] = useState([]);
+
   useEffect(() => {
     fetchUsers();
     fetchMeetings();
@@ -22,7 +27,7 @@ const App = () => {
       const data = await res.json();
       setUsers(data);
     } catch (err) {
-      console.error('Error fetching users:', err);
+      console.error("Error fetching users:", err);
     }
   };
 
@@ -32,22 +37,7 @@ const App = () => {
       const data = await res.json();
       setMeetings(data);
     } catch (err) {
-      console.error('Error fetching meetings:', err);
-    }
-  };
-
-  const renderPage = () => {
-    switch (activeTab) {
-      case 'dashboard':
-        return <Dashboard users={users} meetings={meetings} />;
-      case 'meetings':
-        return <Meetings meetings={meetings} users={users} refreshMeetings={fetchMeetings} />;
-      case 'users':
-        return <Users users={users} refreshUsers={fetchUsers} />;
-      case 'transcript':
-        return <TranscriptAnalysis />;
-      default:
-        return <Dashboard users={users} meetings={meetings} />;
+      console.error("Error fetching meetings:", err);
     }
   };
 
@@ -55,27 +45,54 @@ const App = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       const now = new Date();
-      meetings.forEach(meeting => {
+      meetings.forEach((meeting) => {
         const meetingTime = new Date(meeting.startTime);
         const timeDiff = meetingTime - now;
-        if (timeDiff > 0 && timeDiff <= 5 * 60 * 1000) { // 5 minutes before
-          alert(`Reminder: Meeting Between "${meeting.employee}" and "${meeting.manager}" starts in less than 5 minutes!`);
-          // can use emailJs or nottification API here for real notifications
+        if (timeDiff > 0 && timeDiff <= 5 * 60 * 1000) {
+          alert(
+            `Reminder: Meeting Between "${meeting.employee}" and "${meeting.manager}" starts in less than 5 minutes!`
+          );
         }
       });
-    }, 60 * 1000); // check every minute
+    }, 60 * 1000);
 
     return () => clearInterval(interval);
   }, [meetings]);
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-blue-50 via-indigo-50 to-purple-50">
-      <Header />
-      <Navigation activeTab={activeTab} setActiveTab={setActiveTab} />
-      <main className="max-w-7xl mx-auto px-6 py-8">
-        {renderPage()}
-      </main>
-    </div>
+    <Router>
+      <div className="min-h-screen bg-linear-to-br from-blue-50 via-indigo-50 to-purple-50">
+        <Navigation />
+        <main className="max-w-7xl mx-auto px-6 py-8">
+          <Routes>
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route
+              path="/dashboard"
+              element={<Dashboard users={users} meetings={meetings} />}
+            />
+            <Route
+              path="/meetings"
+              element={
+                <Meetings
+                  meetings={meetings}
+                  users={users}
+                  refreshMeetings={fetchMeetings}
+                />
+              }
+            />
+            <Route
+              path="/users"
+              element={<Users users={users} refreshUsers={fetchUsers} />}
+            />
+            <Route path="/transcript" element={<TranscriptAnalysis />} />
+            <Route
+              path="*"
+              element={<Dashboard users={users} meetings={meetings} />}
+            />
+          </Routes>
+        </main>
+      </div>
+    </Router>
   );
 };
 

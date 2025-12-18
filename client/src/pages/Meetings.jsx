@@ -60,6 +60,15 @@ const Meetings = ({ meetings, users, refreshMeetings }) => {
     }
   };
 
+  // Separate meetings into upcoming and past
+  const now = new Date();
+  const upcomingMeetings = meetings.filter(
+    (meeting) => new Date(meeting.endTime) >= now
+  );
+  const pastMeetings = meetings.filter(
+    (meeting) => new Date(meeting.endTime) < now
+  );
+
   return (
     <div className="space-y-0 relative">
       <div className="flex items-center justify-between">
@@ -72,23 +81,25 @@ const Meetings = ({ meetings, users, refreshMeetings }) => {
           className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
         >
           <Plus className="w-5 h-5" />
-          <span>New Meeting</span>
+          <span className="hidden sm:block">New Meeting</span>
         </button>
       </div>
 
       {showForm && (
         <div className="fixed inset-0 z-99 flex items-center justify-center bg-black/60 bg-opacity-40">
           <form
-            className="relative max-w-4xl w-full max-h-screen overflow-y-auto z-100 bg-white rounded-xl shadow-sm p-6 border border-gray-200 space-y-6"
+            className="relative max-w-[90vw] sm:max-w-4xl w-full max-h-screen overflow-y-auto z-100 bg-white rounded-xl shadow-sm p-6 border border-gray-200 space-y-6"
             onSubmit={(e) => {
               e.preventDefault();
               handleSubmit();
             }}
           >
+            {/* ...form fields unchanged... */}
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
               Schedule New Meeting
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* ...form fields unchanged... */}
               <div>
                 <label
                   className="block text-sm font-medium text-gray-700 mb-2"
@@ -113,7 +124,6 @@ const Meetings = ({ meetings, users, refreshMeetings }) => {
                   ))}
                 </select>
               </div>
-
               <div>
                 <label
                   className="block text-sm font-medium text-gray-700 mb-2"
@@ -138,7 +148,6 @@ const Meetings = ({ meetings, users, refreshMeetings }) => {
                   ))}
                 </select>
               </div>
-
               <div>
                 <label
                   className="block text-sm font-medium text-gray-700 mb-2"
@@ -157,7 +166,6 @@ const Meetings = ({ meetings, users, refreshMeetings }) => {
                   required
                 />
               </div>
-
               <div>
                 <label
                   className="block text-sm font-medium text-gray-700 mb-2"
@@ -177,7 +185,6 @@ const Meetings = ({ meetings, users, refreshMeetings }) => {
                 />
               </div>
             </div>
-
             <fieldset>
               <legend className="block text-sm font-medium text-gray-700 mb-2">
                 Scheduling Mode
@@ -211,7 +218,6 @@ const Meetings = ({ meetings, users, refreshMeetings }) => {
                 </label>
               </div>
             </fieldset>
-
             <div className="flex space-x-3">
               <button
                 type="submit"
@@ -232,11 +238,17 @@ const Meetings = ({ meetings, users, refreshMeetings }) => {
         </div>
       )}
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        {meetings.length === 0 ? (
+      {/* Upcoming Meetings */}
+      <div className="bg-white mt-4 rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
+        <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+          <h3 className="text-lg font-semibold text-gray-900">
+            Upcoming Meetings
+          </h3>
+        </div>
+        {upcomingMeetings.length === 0 ? (
           <div className="p-12 text-center">
             <Calendar className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-500">No meetings scheduled yet</p>
+            <p className="text-gray-500">No upcoming meetings scheduled</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -264,7 +276,7 @@ const Meetings = ({ meetings, users, refreshMeetings }) => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {meetings.map((meeting) => (
+                {upcomingMeetings.map((meeting) => (
                   <tr
                     key={meeting._id}
                     className="hover:bg-gray-50 transition-colors"
@@ -303,6 +315,88 @@ const Meetings = ({ meetings, users, refreshMeetings }) => {
                         {meeting.autoRescheduled
                           ? "Auto-Scheduled"
                           : meeting.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right">
+                      <button
+                        onClick={() => handleDelete(meeting._id)}
+                        className="text-red-600 hover:text-red-800 transition-colors"
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {/* Past Meetings */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+          <h3 className="text-lg font-semibold text-gray-900">Past Meetings</h3>
+        </div>
+        {pastMeetings.length === 0 ? (
+          <div className="p-12 text-center">
+            <Calendar className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+            <p className="text-gray-500">No past meetings</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50 border-b border-gray-200">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Employee
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Manager
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Start Time
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    End Time
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {pastMeetings.map((meeting) => (
+                  <tr
+                    key={meeting._id}
+                    className="hover:bg-gray-50 transition-colors opacity-70"
+                  >
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm font-medium text-gray-900">
+                        {meeting.employee?.name || "N/A"}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">
+                        {meeting.manager?.name || "N/A"}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">
+                        {new Date(meeting.startTime).toLocaleString()}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">
+                        {new Date(meeting.endTime).toLocaleString()}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                        Done
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right">

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Plus, Users, Mail, Briefcase } from "lucide-react";
 import { API_BASE } from "../config/constants";
 
@@ -31,24 +31,26 @@ const UsersPage = ({ users, refreshUsers }) => {
   const managers = users.filter((u) => u.role === "manager");
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 sm:space-y-6 px-2 sm:px-0">
+      <div className="flex items-start sm:items-center justify-between gap-3">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Users</h2>
-          <p className="text-gray-600 mt-1">Manage employees and managers</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Users</h2>
+          <p className="text-gray-600 mt-1 text-sm sm:text-base">
+            Manage employees and managers
+          </p>
         </div>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          className="flex items-center justify-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
         >
           <Plus className="w-5 h-5" />
-          <span>Add User</span>
+          <span className="hidden sm:block">Add User</span>
         </button>
       </div>
 
       {showForm && (
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+        <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 border border-gray-200">
+          <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">
             Add New User
           </h3>
           <div className="space-y-4">
@@ -63,7 +65,7 @@ const UsersPage = ({ users, refreshUsers }) => {
                   setNewUser({ ...newUser, name: e.target.value })
                 }
                 placeholder="John Doe"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
               />
             </div>
 
@@ -78,7 +80,7 @@ const UsersPage = ({ users, refreshUsers }) => {
                   setNewUser({ ...newUser, email: e.target.value })
                 }
                 placeholder="john@company.com"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
               />
             </div>
 
@@ -91,23 +93,23 @@ const UsersPage = ({ users, refreshUsers }) => {
                 onChange={(e) =>
                   setNewUser({ ...newUser, role: e.target.value })
                 }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
               >
                 <option value="employee">Employee</option>
                 <option value="manager">Manager</option>
               </select>
             </div>
 
-            <div className="flex space-x-3">
+            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
               <button
                 onClick={handleSubmit}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className="w-full sm:w-auto px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
               >
                 Add User
               </button>
               <button
                 onClick={() => setShowForm(false)}
-                className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                className="w-full sm:w-auto px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors text-sm"
               >
                 Cancel
               </button>
@@ -116,17 +118,17 @@ const UsersPage = ({ users, refreshUsers }) => {
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
         <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-          <div className="px-6 py-4 border-b border-gray-200 bg-blue-50">
-            <h3 className="text-lg font-semibold text-gray-900 flex items-center space-x-2">
+          <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 bg-blue-50">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900 flex items-center space-x-2">
               <Users className="w-5 h-5 text-blue-600" />
               <span>Employees ({employees.length})</span>
             </h3>
           </div>
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             {employees.length === 0 ? (
-              <p className="text-gray-500 text-center py-8">
+              <p className="text-gray-500 text-center py-6 sm:py-8 text-sm">
                 No employees added yet
               </p>
             ) : (
@@ -134,17 +136,21 @@ const UsersPage = ({ users, refreshUsers }) => {
                 {employees.map((user) => (
                   <div
                     key={user._id}
-                    className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                    className="p-3 sm:p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                   >
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <p className="font-medium text-gray-900">{user.name}</p>
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-gray-900 truncate">
+                          {user.name}
+                        </p>
                         <div className="flex items-center space-x-2 mt-1">
                           <Mail className="w-4 h-4 text-gray-400" />
-                          <p className="text-sm text-gray-600">{user.email}</p>
+                          <p className="text-sm text-gray-600 truncate">
+                            {user.email}
+                          </p>
                         </div>
                       </div>
-                      <span className="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">
+                      <span className="mt-2 sm:mt-0 px-3 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">
                         Employee
                       </span>
                     </div>
@@ -156,15 +162,15 @@ const UsersPage = ({ users, refreshUsers }) => {
         </div>
 
         <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-          <div className="px-6 py-4 border-b border-gray-200 bg-green-50">
-            <h3 className="text-lg font-semibold text-gray-900 flex items-center space-x-2">
+          <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 bg-green-50">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-900 flex items-center space-x-2">
               <Briefcase className="w-5 h-5 text-green-600" />
               <span>Managers ({managers.length})</span>
             </h3>
           </div>
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             {managers.length === 0 ? (
-              <p className="text-gray-500 text-center py-8">
+              <p className="text-gray-500 text-center py-6 sm:py-8 text-sm">
                 No managers added yet
               </p>
             ) : (
@@ -172,17 +178,21 @@ const UsersPage = ({ users, refreshUsers }) => {
                 {managers.map((user) => (
                   <div
                     key={user._id}
-                    className="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                    className="p-3 sm:p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                   >
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <p className="font-medium text-gray-900">{user.name}</p>
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-gray-900 truncate">
+                          {user.name}
+                        </p>
                         <div className="flex items-center space-x-2 mt-1">
                           <Mail className="w-4 h-4 text-gray-400" />
-                          <p className="text-sm text-gray-600">{user.email}</p>
+                          <p className="text-sm text-gray-600 truncate">
+                            {user.email}
+                          </p>
                         </div>
                       </div>
-                      <span className="px-3 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">
+                      <span className="mt-2 sm:mt-0 px-3 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">
                         Manager
                       </span>
                     </div>

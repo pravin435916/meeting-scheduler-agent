@@ -1,5 +1,6 @@
 import React from "react";
 import { Users, Calendar, Zap, Clock } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Dashboard = ({ users, meetings }) => {
   const upcomingMeetings = meetings
@@ -129,22 +130,31 @@ const Dashboard = ({ users, meetings }) => {
           Quick Actions
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <button className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all text-center">
-            <Calendar className="w-6 h-6 text-gray-400 mx-auto mb-2" />
+          <Link
+            to="/meetings"
+            className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all text-center flex flex-col items-center"
+          >
+            <Calendar className="w-6 h-6 text-gray-400 mb-2" />
             <p className="text-sm font-medium text-gray-700">
               Schedule Meeting
             </p>
-          </button>
-          <button className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-green-500 hover:bg-green-50 transition-all text-center">
-            <Users className="w-6 h-6 text-gray-400 mx-auto mb-2" />
+          </Link>
+          <Link
+            to="/users"
+            className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-green-500 hover:bg-green-50 transition-all text-center flex flex-col items-center"
+          >
+            <Users className="w-6 h-6 text-gray-400 mb-2" />
             <p className="text-sm font-medium text-gray-700">Add User</p>
-          </button>
-          <button className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-purple-500 hover:bg-purple-50 transition-all text-center">
-            <Zap className="w-6 h-6 text-gray-400 mx-auto mb-2" />
+          </Link>
+          <Link
+            to="/transcript"
+            className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-purple-500 hover:bg-purple-50 transition-all text-center flex flex-col items-center"
+          >
+            <Zap className="w-6 h-6 text-gray-400 mb-2" />
             <p className="text-sm font-medium text-gray-700">
               Analyze Transcript
             </p>
-          </button>
+          </Link>
         </div>
       </div>
     </div>
