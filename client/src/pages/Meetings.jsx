@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Plus, Trash2, Calendar, Zap } from "lucide-react";
 import { API_BASE } from "../config/constants";
+import toast from "react-hot-toast";
 
 const Meetings = ({ meetings, users, refreshMeetings }) => {
   const [showForm, setShowForm] = useState(false);
@@ -12,6 +13,7 @@ const Meetings = ({ meetings, users, refreshMeetings }) => {
     endTime: "",
     mode: "manual",
   });
+  const [suggestedSlots, setSuggestedSlots] = useState([]);
 
   const employees = users.filter((u) => u.role === "employee");
   const managers = users.filter((u) => u.role === "manager");
@@ -29,9 +31,10 @@ const Meetings = ({ meetings, users, refreshMeetings }) => {
       const data = await res.json();
 
       if (res.status === 409) {
-        alert("Conflict detected! Check suggested slots.");
+        setSuggestedSlots(data.suggestedSlots || []);
+        toast.error("Conflict detected! Check suggested slots.");
       } else {
-        alert(data.message || "Meeting created successfully!");
+        toast.success(data.message || "Meeting created successfully!");
         setShowForm(false);
         setNewMeeting({
           employee: "",
@@ -43,7 +46,32 @@ const Meetings = ({ meetings, users, refreshMeetings }) => {
         refreshMeetings();
       }
     } catch (err) {
-      alert("Error creating meeting: " + err.message);
+      toast.error("Error creating meeting: " + err.message);
+    }
+
+    setLoading(false);
+  };
+  const handleSlotClick = async (slot) => {
+    setLoading(true);
+
+    try {
+      await fetch(`${API_BASE}/meetings`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...newMeeting,
+          startTime: slot.start,
+          endTime: slot.end,
+          mode: "manual",
+        }),
+      });
+
+      toast.success("Meeting scheduled successfully!");
+      setSuggestedSlots([]);
+      setShowForm(false);
+      refreshMeetings();
+    } catch (err) {
+      toast.error("Error scheduling meeting");
     }
 
     setLoading(false);
@@ -55,8 +83,9 @@ const Meetings = ({ meetings, users, refreshMeetings }) => {
     try {
       await fetch(`${API_BASE}/meetings/${id}`, { method: "DELETE" });
       refreshMeetings();
+      toast.success("Meeting deleted successfully!");
     } catch (err) {
-      alert("Error deleting meeting: " + err.message);
+      toast.error("Error deleting meeting: " + err.message);
     }
   };
 
@@ -218,6 +247,28 @@ const Meetings = ({ meetings, users, refreshMeetings }) => {
                 </label>
               </div>
             </fieldset>
+            {newMeeting.mode === "manual" && suggestedSlots.length > 0 && (
+              <div className="border border-yellow-300 bg-yellow-50 rounded-lg p-4">
+                <p className="text-sm font-medium text-yellow-800 mb-2">
+                  Suggested available slots
+                </p>
+
+                <div className="flex flex-wrap gap-3">
+                  {suggestedSlots.map((slot, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => handleSlotClick(slot)}
+                      className="px-3 py-2 bg-white border border-yellow-400 rounded-lg text-sm hover:bg-yellow-100 transition"
+                    >
+                      {new Date(slot.start).toLocaleString()} –{" "}
+                      {new Date(slot.end).toLocaleTimeString()}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div className="flex space-x-3">
               <button
                 type="submit"
@@ -228,7 +279,10 @@ const Meetings = ({ meetings, users, refreshMeetings }) => {
               </button>
               <button
                 type="button"
-                onClick={() => setShowForm(false)}
+                onClick={() => {
+                  setShowForm(false);
+                  setSuggestedSlots([]);
+                }}
                 className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
               >
                 Cancel

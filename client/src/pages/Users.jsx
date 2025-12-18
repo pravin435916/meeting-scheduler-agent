@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Plus, Users, Mail, Briefcase } from "lucide-react";
 import { API_BASE } from "../config/constants";
+import toast from "react-hot-toast";
 
 const UsersPage = ({ users, refreshUsers }) => {
   const [showForm, setShowForm] = useState(false);
@@ -21,9 +22,9 @@ const UsersPage = ({ users, refreshUsers }) => {
       setNewUser({ name: "", email: "", role: "employee" });
       setShowForm(false);
       refreshUsers();
-      alert("User created successfully!");
+      toast.success("User created successfully!");
     } catch (err) {
-      alert("Error creating user: " + err.message);
+      toast.error("Error creating user: " + err.message);
     }
   };
 

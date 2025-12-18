@@ -11,7 +11,7 @@ import Meetings from "./pages/Meetings";
 import Users from "./pages/Users";
 import TranscriptAnalysis from "./pages/TranscriptAnalysis";
 import { API_BASE } from "./config/constants";
-
+import { Toaster } from "react-hot-toast";
 const App = () => {
   const [users, setUsers] = useState([]);
   const [meetings, setMeetings] = useState([]);
@@ -63,6 +63,7 @@ const App = () => {
     <Router>
       <div className="min-h-screen bg-linear-to-br from-blue-50 via-indigo-50 to-purple-50">
         <Navigation />
+        <Toaster position="top-right"/>
         <main className="max-w-7xl mx-auto px-6 py-8">
           <Routes>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />

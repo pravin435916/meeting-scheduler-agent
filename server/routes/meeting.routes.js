@@ -3,7 +3,7 @@ import Meeting from "../models/Meeting.js";
 import {
   hasConflict,
   findAvailableSlots,
-  autoSchedule
+  autoSchedule,
 } from "../services/scheduler.service.js";
 
 const router = express.Router();
@@ -12,21 +12,35 @@ const router = express.Router();
 router.post("/", async (req, res) => {
   const { employee, manager, startTime, endTime, mode } = req.body;
 
+  const durationMin = (new Date(endTime) - new Date(startTime)) / 60000;
+
   const conflict = await hasConflict(employee, manager, startTime, endTime);
 
-  if (conflict) {
-    if (mode === "auto") {
-      const meeting = await autoSchedule(employee, manager);
-      return res.json({
-        message: "Conflict detected → auto-rescheduled",
-        meeting
-      });
-    }
+  if (conflict && mode === "auto") {
+    const meeting = await autoSchedule(
+      employee,
+      manager,
+      startTime,
+      durationMin
+    );
 
-    const suggestions = await findAvailableSlots(employee, manager);
+    return res.json({
+      message: "Auto scheduled using gap logic",
+      meeting,
+    });
+  }
+
+  if (conflict) {
+    const suggestions = await findAvailableSlots(
+      employee,
+      manager,
+      startTime,
+      durationMin
+    );
+
     return res.status(409).json({
       message: "Conflict detected",
-      suggestedSlots: suggestions
+      suggestedSlots: suggestions,
     });
   }
 
@@ -34,7 +48,8 @@ router.post("/", async (req, res) => {
     employee,
     manager,
     startTime,
-    endTime
+    endTime,
+    status: "scheduled",
   });
 
   res.status(201).json(meeting);
@@ -49,8 +64,7 @@ router.delete("/:id", async (req, res) => {
 
 // get all meetings
 router.get("/", async (_, res) => {
-  const meetings = await Meeting.find()
-    .populate("employee manager");
+  const meetings = await Meeting.find().populate("employee manager");
   res.json(meetings);
 });
 
