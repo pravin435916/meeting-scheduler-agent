@@ -109,3 +109,14 @@ cd client
 npm install
 npm run dev
 ```
+
+### Screenshots 
+
+```markdown
+![Dashboard View](screenshots/dashboard.png)
+![Users View](screenshots/users.png)
+![Meeting Scheduling](screenshots/meetings.png)
+![Meeting Create Model](screenshots/form-model.png)
+![Transcript Analysis 1](screenshots/transcript.png)
+![Transcript Analysis 2](screenshots/analyze.png)
+```
