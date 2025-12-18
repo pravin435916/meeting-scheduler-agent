@@ -72,9 +72,6 @@ Requested:
 Scheduled:
 14:00 – 14:30 ✅
 
-yaml
-Copy code
-
 This mimics real calendar behavior.
 
 ---
@@ -100,15 +97,15 @@ This mimics real calendar behavior.
 #### Backend :
 
 ```bash
-cd client
+cd server
 npm install
-npm run dev
+node server.js
 ```
 
 #### Frontend :
 
 ```bash
-cd server
+cd client
 npm install
-node server.js
+npm run dev
 ```
