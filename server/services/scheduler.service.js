@@ -20,7 +20,7 @@ const getConflict = async (employee, manager, start, end) => {
     startTime: { $lt: end },
     endTime: { $gt: start },
     status: "scheduled"
-  }).sort({ startTime: 1 });
+  }).sort({ startTime: 1 }); // sort to get earliest conflict
 };
 
 // GAP-BASED SLOT FINDER
@@ -100,7 +100,7 @@ export const autoSchedule = async (
     manager,
     requestedStart,
     durationMin,
-    1
+    1 // only need first slot
   );
 
   if (!slots.length) return null;

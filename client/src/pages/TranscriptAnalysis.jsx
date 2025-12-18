@@ -68,7 +68,7 @@ const TranscriptAnalysis = () => {
 
 Example:
 Manager: Let's discuss the Q4 goals. What are your main objectives?
-Employee: I'd like to focus on improving customer satisfaction scores by 15% and completing the new feature rollout by December."
+Employee: I'd like to focus on improving customer satisfaction scores by 15% and completing the new feature rollout by December. Manager: Great! Let's set up weekly check-ins to track progress."
               rows={12}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
             />

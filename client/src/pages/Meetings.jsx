@@ -113,7 +113,7 @@ const Meetings = ({ meetings, users, refreshMeetings }) => {
           <span className="hidden sm:block">New Meeting</span>
         </button>
       </div>
-
+      {/* Meeting Form Modal */}
       {showForm && (
         <div className="fixed inset-0 z-99 flex items-center justify-center bg-black/60 bg-opacity-40">
           <form
@@ -218,35 +218,52 @@ const Meetings = ({ meetings, users, refreshMeetings }) => {
               <legend className="block text-sm font-medium text-gray-700 mb-2">
                 Scheduling Mode
               </legend>
-              <div className="flex space-x-6">
-                <label className="inline-flex items-center">
-                  <input
-                    type="radio"
-                    name="mode"
-                    value="manual"
-                    checked={newMeeting.mode === "manual"}
-                    onChange={(e) =>
-                      setNewMeeting({ ...newMeeting, mode: e.target.value })
-                    }
-                    className="form-radio text-blue-600"
+
+              <div className="flex items-center gap-4">
+                {/* Manual Label */}
+                <span
+                  className={`text-sm font-medium ${
+                    newMeeting.mode === "manual"
+                      ? "text-blue-600"
+                      : "text-gray-500"
+                  }`}
+                >
+                  Manual
+                </span>
+
+                {/* Switch */}
+                <button
+                  type="button"
+                  onClick={() =>
+                    setNewMeeting({
+                      ...newMeeting,
+                      mode: newMeeting.mode === "manual" ? "auto" : "manual",
+                    })
+                  }
+                  className={`relative inline-flex h-7 w-14 items-center rounded-full transition-colors duration-300
+        ${newMeeting.mode === "auto" ? "bg-blue-600" : "bg-gray-300"}
+      `}
+                >
+                  <span
+                    className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform duration-300
+          ${newMeeting.mode === "auto" ? "translate-x-7" : "translate-x-1"}
+        `}
                   />
-                  <span className="ml-2 text-sm text-gray-700">Manual</span>
-                </label>
-                <label className="inline-flex items-center">
-                  <input
-                    type="radio"
-                    name="mode"
-                    value="auto"
-                    checked={newMeeting.mode === "auto"}
-                    onChange={(e) =>
-                      setNewMeeting({ ...newMeeting, mode: e.target.value })
-                    }
-                    className="form-radio text-blue-600"
-                  />
-                  <span className="ml-2 text-sm text-gray-700">Auto</span>
-                </label>
+                </button>
+
+                {/* Auto Label */}
+                <span
+                  className={`text-sm font-medium ${
+                    newMeeting.mode === "auto"
+                      ? "text-blue-600"
+                      : "text-gray-500"
+                  }`}
+                >
+                  Auto
+                </span>
               </div>
             </fieldset>
+
             {newMeeting.mode === "manual" && suggestedSlots.length > 0 && (
               <div className="border border-yellow-300 bg-yellow-50 rounded-lg p-4">
                 <p className="text-sm font-medium text-yellow-800 mb-2">
