@@ -11,7 +11,7 @@ import Meetings from "./pages/Meetings";
 import Users from "./pages/Users";
 import TranscriptAnalysis from "./pages/TranscriptAnalysis";
 import { API_BASE } from "./config/constants";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 const App = () => {
   const [users, setUsers] = useState([]);
   const [meetings, setMeetings] = useState([]);
@@ -40,7 +40,7 @@ const App = () => {
       console.error("Error fetching meetings:", err);
     }
   };
-
+  // console.log("Meetings:", meetings);
   // meeting reminder logic
   useEffect(() => {
     const interval = setInterval(() => {
@@ -49,8 +49,8 @@ const App = () => {
         const meetingTime = new Date(meeting.startTime);
         const timeDiff = meetingTime - now;
         if (timeDiff > 0 && timeDiff <= 5 * 60 * 1000) {
-          alert(
-            `Reminder: Meeting Between "${meeting.employee}" and "${meeting.manager}" starts in less than 5 minutes!`
+          toast(
+            `Reminder: Meeting Between "${meeting.employee.name}" and "${meeting.manager.name}" starts in less than 5 minutes!`
           );
         }
       });
