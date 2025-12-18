@@ -14,7 +14,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/meetings", meetingRoutes);
 app.use("/api/transcripts", transcriptRoutes);
 
-app.get("/", (_, res) => {
+app.get("/", (req, res) => {
   res.send("Voiceboard Scheduling Agent API running");
 });
 

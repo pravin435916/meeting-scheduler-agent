@@ -8,10 +8,7 @@ import {
 
 const router = express.Router();
 
-/**
- * Create meeting
- * mode: manual | auto
- */
+// schedule a meeting manual or auto
 router.post("/", async (req, res) => {
   const { employee, manager, startTime, endTime, mode } = req.body;
 
@@ -50,9 +47,7 @@ router.delete("/:id", async (req, res) => {
   res.json({ message: "Meeting deleted" });
 });
 
-/**
- * List meetings
- */
+// get all meetings
 router.get("/", async (_, res) => {
   const meetings = await Meeting.find()
     .populate("employee manager");

@@ -2,7 +2,7 @@ import express from "express";
 import { analyzeTranscript } from "../services/transcript.service.js";
 
 const router = express.Router();
-
+// Analyze transcript and extract structured data
 router.post("/analyze", async (req, res) => {
   try {
     const { transcript } = req.body;

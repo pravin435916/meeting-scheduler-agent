@@ -4,9 +4,7 @@ const WORK_START_HOUR = 9;
 const WORK_END_HOUR = 18;
 const SLOT_DURATION_MIN = 30;
 
-/**
- * Check overlap conflict
- */
+// Check for scheduling conflicts
 export const hasConflict = async (employeeId, managerId, start, end) => {
   return await Meeting.exists({
     $or: [
@@ -18,10 +16,7 @@ export const hasConflict = async (employeeId, managerId, start, end) => {
     status: "scheduled"
   });
 };
-
-/**
- * Generate next available slots
- */
+//  Generate next available slots
 export const findAvailableSlots = async (employeeId, managerId) => {
   const slots = [];
   const base = new Date();
@@ -49,9 +44,7 @@ export const findAvailableSlots = async (employeeId, managerId) => {
   return slots;
 };
 
-/**
- * Auto-schedule first free slot
- */
+// Auto-schedule first free slot
 export const autoSchedule = async (employee, manager) => {
   const slots = await findAvailableSlots(employee, manager);
   if (!slots.length) return null;
